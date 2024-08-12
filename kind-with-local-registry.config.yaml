@@ -1,0 +1,18 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+    extraPortMappings:
+      # HTTP traffic - This is used for accessing the metrics and repair user interfaces
+      - containerPort: 32080
+        hostPort: 8080
+        protocol: TCP
+      # Traefik
+      - containerPort: 32090
+        hostPort: 8090
+        protocol: TCP
+    # lokaler Pfad um vom Host Dateien in die Kubernetes Kind Node zu mappen - notwendig um Kubernetes pods mit volumnes zu konfigurieren
+    #extraMounts:
+    #  - hostPath: /tmp/kind-node-volumes
+    #    containerPath: /hostfolder

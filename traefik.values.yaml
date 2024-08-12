@@ -1,0 +1,62 @@
+providers:
+  kubernetesCRD:
+    namespaces:
+      - default
+      - traefik
+  kubernetesIngress:
+    namespaces:
+      - default
+      - traefik
+
+service:
+  type: NodePort
+
+#exposedPort: true
+#    nodePort: 32090
+
+ports:
+  traefik:
+    expose:
+         default: true
+         internal: true
+    nodePort: 32090
+  web:
+    nodePort: 32080
+  websecure:
+    nodePort: 32443
+
+additionalArguments:
+  - --api
+  - --api.insecure
+  - --providers.kubernetesingress.ingressclass=traefik-private
+  - --providers.kubernetescrd.ingressclass=traefik-private
+  - --serversTransport.insecureSkipVerify=true
+
+ingressRoute:
+  dashboard:
+    enabled: true
+
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+
+rollingUpdate:
+  maxUnavailable: 0
+
+# Whether Role Based Access Control objects like roles and rolebindings should be created
+rbac:
+  enabled: true
+  # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
+  # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
+  namespaced: false
+  
+extraObjects:
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: strip-mynginx-prefix
+      namespace: default
+    spec:
+      stripPrefix:
+        prefixes:
+          - "/mynginx"
