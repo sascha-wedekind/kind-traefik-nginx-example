@@ -1,0 +1,49 @@
+configuration:
+  akhq:
+    connections:
+      my-cluster-sasl:
+        properties:
+          bootstrap.servers: "my-kafka.default.svc.cluster.local:9092"
+          security.protocol: SASL_PLAINTEXT
+          sasl.mechanism: PLAIN
+          sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="admin";
+      
+  micronaut:
+    server:
+      context-path: /myakhq
+      forwarded-headers:
+        enabled: true
+
+readinessProbe:
+  enabled: true
+  prefix: /myakhq # set same as `micronaut.server.context-path`
+  path: /health
+  port: management
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+  httpGetExtra: {}
+
+livenessProbe:
+  enabled: true
+  prefix: /myakhq # set same as `micronaut.server.context-path`
+  path: /health
+  port: management
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+  httpGetExtra: {}
+
+ingress:
+    enabled: true
+#    annotations:
+#        traefik.ingress.kubernetes.io/router.middlewares: default-strip-myakhq-prefix@kubernetescrd
+    ingressClassName: "traefik"
+    hosts: 
+      - localhost
+    paths: 
+      - "/myakhq"

@@ -1,0 +1,18 @@
+#
+# Configuration file for kafkactl matching the configurations in
+# - kafka.values.yaml
+# - kind-with-local-registry.config.yaml
+#
+# Meant to run on the host and not within kubernetes 
+# https://github.com/deviceinsight/kafkactl
+#
+contexts:
+  default:
+    brokers:
+      - localhost:9092
+
+    sasl:
+      enabled: true
+      username: admin
+      password: admin
+      mechanism: plaintext

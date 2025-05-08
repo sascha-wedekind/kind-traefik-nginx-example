@@ -41,9 +41,25 @@ fi
 #
 # Install and confiugre Traefik
 #
-helm install traefik traefik/traefik --version v30.0.2 -n traefik --create-namespace -f $SOURCE/traefik.values.yaml  --wait
+helm install traefik traefik/traefik --version v35.0.0 -n traefik --create-namespace -f $SOURCE/traefik.values.yaml  --wait
 
 #
 # Install and configure Nginx
 #
-helm install my-nginx oci://registry-1.docker.io/bitnamicharts/nginx -f $SOURCE/nginx.values.yaml --wait
+helm install my-nginx oci://registry-1.docker.io/bitnamicharts/nginx --version 19.0.4 -f $SOURCE/nginx.values.yaml
+
+#
+# Install PorstgreSQL
+#
+helm install my-postgresql oci://registry-1.docker.io/bitnamicharts/postgresql -f $SOURCE/postgres.values.yaml
+
+#
+# Kafka
+# https://artifacthub.io/packages/helm/bitnami/kafka
+#
+helm install my-kafka oci://registry-1.docker.io/bitnamicharts/kafka --version 32.2.1 -f $SOURCE/kafka.values.yaml
+
+#
+# AKQH - Kafka UI
+#
+helm install my-akhq akhq/akhq --version 0.25.1 -f $SOURCE/akhq.values.yaml

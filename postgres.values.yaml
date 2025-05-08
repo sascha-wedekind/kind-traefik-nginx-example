@@ -1,0 +1,14 @@
+global:
+  postgresql:
+    auth:
+      postgresPassword: admin
+      username: admin
+      password: admin
+
+primary:
+  service:
+    type: NodePort
+    nodePorts:
+      postgresql: 32767
+  persistence:
+    enabled: false
